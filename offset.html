@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="generator" content="HTML Tidy for HTML5 for Linux version 5.6.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bitcoin Animation with Form</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+        body {
+            background: url("offset.jpg") no-repeat center center fixed;
+            background-size: cover;
+            overflow: hidden; /* Prevent scrollbars */
+            height: 100vh; /* Full viewport height */
+            position: relative;
+            font-size: 1.00rem;
+            color: #39FF14; /* Lawn green */
+            text-shadow: .1rem .1rem .1rem black;
+            font-family: 'Press Start 2P', sans-serif; /* Apply the font family to the entire body */
+        }
+        .bitcoin {
+            position: absolute;
+            color: black;
+            font-size: 24px; /* Adjust size as needed */
+            user-select: none;
+            transition: transform 2s ease-in-out; /* Smooth transition for movement and rotation */
+        }
+
+        .range-slider {
+            transform-origin: 100% 0%;
+            transform: rotate(270deg); /* Rotating to give a unique look */
+            max-width: 50vh;
+            background: none;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: #FF1493; /* Deep pink */
+            text-shadow: .1rem .1rem .1rem black;
+        }
+
+        .form-group input,
+        .form-group button {
+            background-color: #333;
+            border: 1px solid #39FF14; /* Lawn green */
+            color: #00FFFF; /* Aqua */
+            margin: 5px 0;
+        }
+
+        .btn-primary {
+            background-color: #333;
+            border: 1px solid #39FF14; /* Lawn green */
+            color: #00FFFF; /* Aqua */
+            margin: 5px 0;
+            text-shadow: 0 0 5px #FF1493; /* Deep pink */
+            transition: all .3s ease;
+            box-shadow: 0 0 10px #FF1493, 0 0 20px #FF1493, 0 0 30px #FF1493; /* Deep pink */
+            padding: 10px 20px;
+            font-size: 0.50rem; /* Adjusting button font size */
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 0 20px #FF1493, 0 0 30px #FF1493, 0 0 40px #FF1493; /* Deep pink */
+            color: white;
+        }
+
+        .navbar {
+            font-size: 1.75rem;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background-color: rgba(0, 0, 0, .7);
+            padding: 10px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            font-family: 'Press Start 2P', sans-serif; /* Apply the font family to the navbar */
+        }
+
+        .navbar a {
+            background-color: #333;
+            border: 1px solid #39FF14; /* Lawn green */
+            color: #00FFFF; /* Aqua */
+            padding: 10px 20px;
+            margin: 5px;
+            font-family: 'Press Start 2P', sans-serif; /* Ensuring the same font family */
+            cursor: pointer;
+            text-shadow: 0 0 5px #39FF14; /* Lawn green */
+            transition: all .3s ease;
+            font-size: 0.5rem; /* Adjusted font size */
+            box-shadow: 0 0 10px #39FF14, 0 0 20px #39FF14, 0 0 30px #39FF14; /* Lawn green */
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .navbar a:hover {
+            box-shadow: 0 0 20px #39FF14, 0 0 30px #39FF14, 0 0 40px #39FF14; /* Neon green */
+            color: white;
+        }
+</style>
+</head>
+<body>
+<div class="container mt-5">
+<form id="offsetForm" action="/offset" method="post" name="offsetForm">
+    <div class="form-group">
+        <label for="offsetValue">Voltage Offset</label>
+        <div class="range-slider">
+            <input type="range" class="form-control" id="offsetValue" name="offsetValue" min="-2" max="2" step="0.1">
+            <span id="rangeValue">0</span>&nbsp;volts.
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+<script>
+
+// Function to move and rotate a Bitcoin character
+function animateBitcoin(bitcoin) {
+    const newX = Math.random() * window.innerWidth;
+    const newY = Math.random() * window.innerHeight;
+    const rotation = Math.random() * 360;
+    bitcoin.style.transform = `translate(${newX}px, ${newY}px) rotate(${rotation}deg)`;
+}
+
+// Create multiple Bitcoin characters
+for (let i = 0; i < 5; i++) { // Adjust number of Bitcoins as needed
+    const bitcoin = document.createElement('div');
+    bitcoin.innerHTML = '&#8383;';
+    bitcoin.className = 'bitcoin';
+    document.body.appendChild(bitcoin);
+    setInterval(() => animateBitcoin(bitcoin), 2000); // Adjust time as needed for animation speed
+}
+
+// Load initial value for the form from /offset.csv (plaintext)
+async function loadInitialValue() {
+    try {
+        const response = await fetch('/offset.csv');
+        const data = await response.text();
+        document.getElementById('offsetValue').value = data.trim(); // Use trim to remove any potential newline or whitespace
+    } catch (error) {
+        console.error('Error fetching initial value:', error);
+    }
+    const offsetValue = document.getElementById('offsetValue');
+    const rangeValue = document.getElementById('rangeValue');
+
+    // Update display on input event (as the slider moves)
+    offsetValue.addEventListener('input', function() {
+        rangeValue.textContent = this.value;
+    });
+
+    // Initialize display
+    rangeValue.textContent = offsetValue.value;
+}
+
+window.onload = function() {
+    loadInitialValue();
+};
+
+</script>
+<nav class="navbar">
+    <a href="index.html">Home</a>
+    <a href="settings.html">Settings</a>
+</nav>
+</body>
+</html>

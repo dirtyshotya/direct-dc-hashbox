@@ -1,0 +1,11 @@
+[Unit]
+Description=NPM Start Service
+
+[Service]
+Type=simple
+User=100acresranch
+WorkingDirectory=/home/100acresranch
+ExecStart=/usr/bin/npm start
+
+[Install]
+WantedBy=multi-user.target

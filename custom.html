@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="generator" content="HTML Tidy for HTML5 for Linux version 5.6.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automated Solar Hash Tuner</title>
+    <!-- Add Bootstrap CSS link -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body {
+            overflow: scroll;
+            background: url("custom.jpg");
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+            font-size: 1.1rem; /* Reduced to 1/4 of the original 2.2rem */
+            background-color: #454545;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #39FF14; /* Lawn green */
+            text-align: center;
+            text-shadow: .1rem .1rem .1rem black;
+        }
+        h1, label {
+            font-weight: bold;
+            color: #FF1493; /* Deep pink */
+            text-shadow: .1rem .1rem .1rem black;
+        }
+        h1 {
+            font-weight: 950;
+        }
+        hr {
+            height: 2px;
+            border: 0;
+            background: linear-gradient(to right, #00FF00, #1A1A1A, #FF1493); /* Lawn green and deep pink */
+            background-size: 200% auto;
+            animation: animatedHr 4s linear infinite;
+        }
+        .disclaimer {
+            color: powderblue; 
+            text-shadow: .1rem .1rem .1rem black;
+            font-size: 0.5em;
+        }
+        input, button {
+            background-color: #333;
+            border: 1px solid #39FF14; /* Lawn green */
+            color: #00FFFF; /* Aqua */
+            margin: 2px 0; /* Reduced margin */
+        }
+        @keyframes animatedHr {
+            0% { background-position: 0%; }
+            100% { background-position: 100%; }
+        }
+        .container {
+            width: 100%;
+            max-width: 300px; /* Reduced to 1/4 size */
+            padding: 10px; /* Reduced padding */
+            box-sizing: border-box;
+            overflow-y: scroll;
+            max-height: 90vh;
+            padding-bottom: 50px; /* Ensure space above the navbar */
+        }
+        #voltageFrame {
+            height: 225px;
+            width: 225px;
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            border: none;
+        }
+        #logo {
+            line-height: 50%;
+            width: 175px;
+            height: 125px;
+            font-family: 'Press Start 2P', sans-serif;
+            font-weight: 400;
+            font-style: italic;
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: rotate(-45deg);
+            color: powderblue; /* Powderblue */
+            padding: 1.5rem;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            display: flex;
+            place-items: center;
+            align-items: center;
+            flex-direction: column;
+            text-shadow: none; /* Remove glow effect */
+        }
+        #logo span {
+            position: absolute;
+            top: 5.5rem; /* Adjusted to move closer */
+            left: 5.5rem; /* Adjusted to move closer */
+            transform: translateX(-50%);
+            z-index: 2;
+            font-size: 0.5em; /* Restore to original size */
+            color: powderblue; /* Powderblue */
+            padding: 5px 10px;
+            border-radius: 10px;
+            text-shadow: none; /* Remove glow effect */
+        }
+        .navbar {
+            font-size: 1.75rem;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background-color: rgba(0, 0, 0, .7);
+            padding: 10px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+        .navbar a,
+        .navbar button,
+        button.btn {
+            background-color: #333;
+            border: 1px solid #39FF14; /* Lawn green */
+            color: #00FFFF; /* Aqua */
+            padding: 10px 20px;
+            margin: 5px;
+            font-family: 'Press Start 2P', sans-serif;
+            cursor: pointer;
+            text-shadow: 0 0 5px #39FF14; /* Lawn green glow */
+            transition: all .3s ease;
+            font-size: 0.5rem;
+            box-shadow: 0 0 10px #39FF14, 0 0 20px #39FF14, 0 0 30px #39FF14; /* Neon green glow */
+            text-decoration: none;
+            text-align: center;
+        }
+        .navbar a:hover,
+        .navbar button:hover,
+        button.btn:hover {
+            box-shadow: 0 0 20px #39FF14, 0 0 30px #39FF14, 0 0 40px #39FF14; /* Neon green hover effect */
+            color: white;
+        }
+        /* Custom Scrollbar Styles */
+        ::-webkit-scrollbar {
+            width: 4px; /* Reduced to 1/4 size */
+        }
+        ::-webkit-scrollbar-track {
+            background: #333;
+            border: 2px solid #39FF14; /* Lawn green */
+        }
+        ::-webkit-scrollbar-thumb {
+            background-color: #333;
+            border-radius: 5px; /* Reduced size */
+            border: 2px solid #FF1493; /* Deep pink */
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #00FFFF; /* Aqua */
+        }
+        /* Firefox scrollbar styles */
+        html {
+            scrollbar-width: thin;
+            scrollbar-color: #FF1493 #333; /* Deep pink */
+        }
+    </style>
+</head>
+<body>
+    <div id="logo">
+        <img width="95px" height="95px" src="logo.svg" alt="logo">
+        <span>FAFO&nbsp;BOX</span>
+    </div>
+    <div class="container mt-5" id="forms">
+        <hr>
+        <h1 class="display-4">Automated Solar Hash Tuner</h1>
+        <hr>
+        <form id="tunerForm" action="http://100acresranch:5002/api/update-settings" method="POST">
+            <div id="voltageFrequencyPairs">
+                <!-- Dynamic Voltage-Frequency pairs will be inserted here -->
+            </div>
+            <button type="submit" class="btn mt-3">Update</button>
+        </form>
+        <hr>
+    </div>
+    <iframe id="voltageFrame" src="/voltage" frameborder="0" allowtransparency="true"></iframe>
+    <nav class="navbar">
+        <a href="/">Home</a>
+        <a href="settings.html">Settings</a>
+        <a href="/offset.html">Set Voltage Offset</a> 
+    </nav>
+    <script>
+        const voltages = [
+            14.2, 14.0, 13.8, 13.7, 13.6, 13.5, 13.4, 13.3, 13.2, 13.1,
+            13.0, 12.8, 12.6, 12.5, 12.4, 12.3, 12.2, 12.1, 12.0, 11.9
+        ];
+
+        async function fetchVoltageFrequencyPairs() {
+            try {
+                const response = await fetch('http://100acresranch:3000/api/fetch-frequency-pairs');
+                if (response.ok) {
+                    const csvData = await response.text();
+                    const pairs = parseCSV(csvData);
+                    populateForm(pairs);
+                } else {
+                    console.error('Failed to fetch data:', response.statusText);
+                    populateForm({});
+                }
+            } catch (error) {
+                console.error('Error fetching frequency pairs:', error);
+                populateForm({});
+            }
+        }
+
+        function parseCSV(csvText) {
+            const rows = csvText.split('\n').filter(row => row.trim());
+            const data = {};
+            rows.forEach(row => {
+                const [voltage, frequency] = row.split(',');
+                if (voltage && frequency) {
+                    data[voltage.trim()] = frequency.trim();
+                }
+            });
+            return data;
+        }
+
+        function populateForm(pairs) {
+            const container = document.getElementById('voltageFrequencyPairs');
+            voltages.forEach((voltage, index) => {
+                const frequency = pairs[voltage] || '';
+                container.innerHTML += `
+                    <label for="voltage_${index + 1}">Voltage ${voltage}:</label>
+                    <input type="text" id="voltage_${index + 1}" name="voltage_${index + 1}" value="${voltage}" readonly>
+                    <label for="frequency_${index + 1}">Frequency:</label>
+                    <input type="text" id="frequency_${index + 1}" name="frequency_${index + 1}" value="${frequency}">
+                    <br>
+                `;
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await fetchVoltageFrequencyPairs();
+            loadFormData();
+        });
+
+        function saveFormData() {
+            for (let i = 1; i <= 20; i++) {
+                const frequency = document.getElementById(`frequency_${i}`).value;
+                localStorage.setItem(`frequency_${i}`, frequency);
+            }
+        }
+
+        function loadFormData() {
+            for (let i = 1; i <= 20; i++) {
+                const frequency = localStorage.getItem(`frequency_${i}`);
+                if (frequency) {
+                    document.getElementById(`frequency_${i}`).value = frequency;
+                }
+            }
+        }
+
+        document.getElementById('tunerForm').addEventListener('submit', () => {
+            saveFormData();
+        });
+    </script>
+</body>
+</html>

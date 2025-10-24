@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="generator" content="HTML Tidy for HTML5 for Linux version 5.6.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Automated Solar Hash Tuner</title>
+<!-- Add Bootstrap CSS link -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+    body {
+        overflow: scroll;
+        background: url("hashbox.jpg");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+        font-size: 2.2rem;
+        background-color: #454545;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        color: #39FF14; /* Lawn green */
+        text-align: center;
+        text-shadow: .1rem .1rem .1rem black;
+    }
+    h1, label {
+        font-weight: bold;
+        color: #FF1493; /* Deep pink */
+        text-shadow: .1rem .1rem .1rem black;
+    }
+    h1 {
+        font-weight: 950;
+    }
+    hr {
+        height: 2px;
+        border: 0;
+        background: linear-gradient(to right, #00FF00, #1A1A1A, #FF1493); /* Lawn green and deep pink */
+        background-size: 200% auto;
+        animation: animatedHr 4s linear infinite;
+    }
+    .disclaimer {
+        color: powderblue; 
+        text-shadow: .1rem .1rem .1rem black;
+        font-size: 0.5em;
+    }
+    input, button {
+        background-color: #333;
+        border: 1px solid #39FF14; /* Lawn green */
+        color: #00FFFF; /* Aqua */
+        margin: 5px 0;
+    }
+    @keyframes animatedHr {
+        0% { background-position: 0%; }
+        100% { background-position: 100%; }
+    }
+    .container {
+        width: 100%;
+        max-width: 600px;
+        padding: 20px;
+        box-sizing: border-box;
+        overflow-y: scroll;
+        max-height: 90vh;
+    }
+    #voltageFrame {
+        background-color: #39FF14; /* Neon green for the bubble */
+        color: #FF1493; /* Deep pink for the text */
+        border: 2px solid #39FF14; /* Optional border color */
+        border-radius: 50%; /* Ensures bubble shape */
+        box-shadow: 0 0 20px #39FF14, 0 0 30px #39FF14; /* Glow effect */
+        height: 225px;
+        width: 225px;
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        border: none;
+    }
+    #logo {
+        line-height: 50%;
+        width: 175px;
+        height: 125px;
+        font-family: 'Press Start 2P', sans-serif;
+        font-weight: 400;
+        font-style: italic;
+        position: fixed;
+        top: 0;
+        left: 0;
+        transform: rotate(-45deg);
+        color: powderblue; /* Powderblue */
+        padding: 1.5rem;
+        background-color: rgba(0, 0, 0, 0.5);
+        border-radius: 50%;
+        display: flex;
+        place-items: center;
+        align-items: center;
+        flex-direction: column;
+        text-shadow: none; /* Remove glow effect */
+    }
+    #logo span {
+        position: absolute;
+        top: 5.5rem; /* Adjusted to move closer */
+        left: 5.5rem; /* Adjusted to move closer */
+        transform: translateX(-50%);
+        z-index: 2;
+        font-size: 0.25em;
+        color: powderblue; /* Powderblue */
+        padding: 5px 10px;
+        border-radius: 10px;
+        text-shadow: none; /* Remove glow effect */
+    }
+    .navbar {
+        font-size: 1.75rem;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        background-color: rgba(0, 0, 0, .7);
+        padding: 10px 0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+    }
+    .navbar a,
+    .navbar button,
+    button.btn {
+        background-color: #333;
+        border: 1px solid #39FF14; /* Lawn green */
+        color: #00FFFF; /* Aqua */
+        padding: 10px 20px;
+        margin: 5px;
+        font-family: 'Press Start 2P', sans-serif;
+        cursor: pointer;
+        text-shadow: 0 0 5px #39FF14; /* Lawn green */
+        transition: all .3s ease;
+        font-size: 0.5rem;
+        box-shadow: 0 0 10px #39FF14, 0 0 20px #39FF14, 0 0 30px #39FF14; /* Lawn green */
+        text-decoration: none;
+        text-align: center;
+    }
+    .navbar a:hover,
+    .navbar button:hover,
+    button.btn:hover {
+        box-shadow: 0 0 20px #39FF14, 0 0 30px #39FF14, 0 0 40px #39FF14; /* Neon green */
+        color: white;
+    }
+    /* Custom Scrollbar Styles */
+    /* Works on Chrome, Edge, and Safari */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+        background: #333;
+        border: 2px solid #39FF14; /* Lawn green */
+    }
+    ::-webkit-scrollbar-thumb {
+        background-color: #333;
+        border-radius: 10px;
+        border: 2px solid #FF1493; /* Deep pink */
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background-color: #00FFFF; /* Aqua */
+    }
+    /* Firefox scrollbar styles */
+    html {
+        scrollbar-width: thin;
+        scrollbar-color: #FF1493 #333; /* Deep pink */
+    }
+</style>
+</head>
+<body>
+    <div id="logo">
+        <img width="95px" height="95px" src="logo.svg" alt="logo">
+        <span>FAFO&nbsp;BOX</span> <!-- Changed the text to FAFO BOX -->
+    </div>
+    <div class="disclaimer">
+        <h2>Automated Solar Hash Tuner Disclaimer</h2>
+        <p>**WARNING:** This automated solar hashbox involves high amperage. By using this tuner, you agree to
+        assume all risks associated with its use, including but not limited
+        to:</p>
+        <ul>
+            <li>Death from electrical shock</li>
+            <li>Risk of fire from improper maintenance</li>
+            <li>Damage to your mining hardware</li>
+            <li>failures from extreme overclocking</li>
+            <li>Legal liability</li>
+        </ul>
+        <p>Please be safe and perform visual and thermal inspections monthly, most of all if you're unsure ask.</p>
+        <p>By clicking the "I Agree" button below, you acknowledge that you
+        have read and understood this disclaimer and agree to its
+        terms.</p>
+        <button class="btn btn-warning" type="button" id="agreeButton">I Agree</button>
+    </div>
+    <div class="container mt-5" id="forms" style="display: none;">
+        <hr>
+        <h1 class="display-4">Automated Solar Hash Tuner</h1>
+        <hr>
+        <form action="/tuner" method="post">
+            <div class="form-group">
+                <label for="settings">Select Setting:</label>
+                <select class="form-control" id="settings" name="settings" onchange="toggleFrequencyInput()">
+                    <option value="Efficiency">Efficiency</option>
+                    <option value="Duration">Duration</option>
+                    <option value="MaxHash80">Hashpeg Max</option>
+                    <option value="Custom">Custom</option> <!-- Added Custom option -->
+                </select>
+            </div>
+            <!-- Max Frequency input -->
+            <div class="form-group" style="display:none;" id="maxFreqGroup">
+                <label for="maxFrequency">Max Frequency:</label>
+                <input type="text" class="form-control" id="maxFrequency" name="maxFrequency">
+            </div>
+            <!-- Min Frequency input -->
+            <div class="form-group" style="display:none;" id="minFreqGroup">
+                <label for="minFrequency">Min Frequency:</label>
+                <input type="text" class="form-control" id="minFrequency" name="minFrequency">
+            </div>
+            <!-- Frequency Step input -->
+            <div class="form-group" style="display:none;" id="freqStepGroup">
+                <label for="freqStep">Frequency Step:</label>
+                <input type="text" class="form-control" id="freqStep" name="freqStep">
+            </div>
+            <!-- Config Step input -->
+            <div class="form-group" style="display:none;" id="configStepGroup">
+                <label for="configStep">Config Step:</label>
+                <input type="text" class="form-control" id="configStep" name="configStep">
+            </div>
+            <button type="submit" class="btn">Apply</button>
+        </form>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById('settings').addEventListener('change', function() {
+                    const selectedSetting = this.value;
+                    if (selectedSetting === 'Efficiency' || selectedSetting === 'Custom') {
+                        document.getElementById('maxFreqGroup').style.display = 'none';
+                        document.getElementById('minFreqGroup').style.display = 'none';
+                        document.getElementById('freqStepGroup').style.display = 'none';
+                        document.getElementById('configStepGroup').style.display = 'none';
+                    } else {
+                        document.getElementById('maxFreqGroup').style.display = 'block';
+                        document.getElementById('minFreqGroup').style.display = 'block';
+                        document.getElementById('freqStepGroup').style.display = 'block';
+                        document.getElementById('configStepGroup').style.display = 'block';
+                        fetchSettings(selectedSetting);
+                    }
+                });
+
+                document.getElementById('agreeButton').addEventListener('click', function() {
+                    document.querySelector('.disclaimer').style.display = 'none';
+                    document.querySelector('#forms').style.display = 'block';
+                });
+            });
+
+            function fetchSettings(selection) {
+                if (!selection) {
+                    console.error('Selection is undefined');
+                    return;
+                }
+
+                const settingParam = selection.replace('MaxHash', '');
+                fetch(`/load-settings/${settingParam}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        Object.entries(data).forEach(([key, value]) => {
+                            const inputField = document.getElementById(key);
+                            if (inputField) {
+                                inputField.value = value;
+                            }
+                        });
+                    })
+                    .catch(error => console.error('Failed to load settings:', error));
+            }
+
+            function toggleFrequencyInput() {
+                var settings = document.getElementById("settings").value;
+                var maxFreqGroup = document.getElementById("maxFreqGroup");
+                var minFreqGroup = document.getElementById("minFreqGroup");
+                var freqStepGroup = document.getElementById("freqStepGroup");
+                var configStepGroup = document.getElementById("configStepGroup");
+                if (settings === 'Efficiency' || settings === 'Custom') {
+                    maxFreqGroup.style.display = "none";
+                    minFreqGroup.style.display = "none";
+                    freqStepGroup.style.display = "none";
+                    configStepGroup.style.display = "none";
+                } else {
+                    maxFreqGroup.style.display = "block";
+                    minFreqGroup.style.display = "block";
+                    freqStepGroup.style.display = "block";
+                    configStepGroup.style.display = "block";
+                    fetchSettings(settings);
+                }
+            }
+
+            const settingsSelect = document.getElementById('settings');
+            const maxFreqGroup = document.getElementById('maxFreqGroup');
+            const minFreqGroup = document.getElementById('minFreqGroup');
+            const freqStepGroup = document.getElementById('freqStepGroup');
+            const configStepGroup = document.getElementById('configStepGroup');
+            settingsSelect.addEventListener('change', function() {
+                const selectedValue = this.value;
+                if (selectedValue === 'Efficiency' || selectedValue === 'Custom') {
+                    maxFreqGroup.style.display = "none";
+                    minFreqGroup.style.display = "none";
+                    freqStepGroup.style.display = "none";
+                    configStepGroup.style.display = "none";
+                } else {
+                    maxFreqGroup.style.display = "block";
+                    minFreqGroup.style.display = "block";
+                    freqStepGroup.style.display = "block";
+                    configStepGroup.style.display = "block";
+                    fetchSettings(selectedValue);
+                }
+            });
+        </script>
+        <hr>
+    </div>
+    <iframe id="voltageFrame" src="/voltage" frameborder="0" allowtransparency="true"></iframe>
+    <nav class="navbar">
+        <a href="/">Home</a>
+        <a href="settings.html">Settings</a>
+        <a href="/offset.html">Set Voltage Offset</a>
+        <a href="custom.html">Custom</a> <!-- Added Custom link -->
+    </nav>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const setting = '80';
+            fetch(`/load-settings/${setting}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.maxFrequency !== 'Error') {
+                        document.getElementById('maxFrequency').value = data.maxFrequency;
+                    }
+                    if (data.minFrequency !== 'Error') {
+                        document.getElementById('minFrequency').value = data.minFrequency;
+                    }
+                    if (data.freqStep !== 'Error') {
+                        document.getElementById('freqStep').value = data.freqStep;
+                    }
+                    if (data.configStep !== 'Error') {
+                        document.getElementById('configStep').value = data.configStep;
+                    }
+                })
+                .catch(error => console.error('Error loading settings:', error));
+        });
+
+        // Refresh voltage frame every 10 seconds
+        setInterval(() => {
+            var iframe = document.getElementById('voltageFrame');
+            iframe.src = iframe.src;
+        }, 10000);
+    </script>
+</body>
+</html>
